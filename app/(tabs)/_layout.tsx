@@ -1,7 +1,6 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
-console.log('test commit 3');
 
 export default function TabLayout() {
   return (
