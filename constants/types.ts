@@ -11,3 +11,7 @@ export type InteractionsPropType = {
 export type MapRefType = MutableRefObject<CameraRef | null>
 export type LocationRefType = MutableRefObject<Location | null>
 export type MapPropType = { projectionType: ProjectionType, cameraRef: MapRefType, locationRef: LocationRefType }
+export type ThemeContextType = {
+    currentTheme: 'light' | 'dark';
+    setCurrentTheme: SetStateType<'light' | 'dark'>
+}

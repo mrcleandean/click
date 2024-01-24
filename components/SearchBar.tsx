@@ -1,24 +1,30 @@
-import { lightTheme } from "@/constants/constants";
+import { theme } from "@/constants/constants";
+import { useThemeContext } from "@/context/useThemeContext";
 import { StyleSheet, TextInput } from "react-native";
 
 const SearchBar = () => {
+    const { currentTheme } = useThemeContext();
     return (
         <TextInput
-            placeholderTextColor={lightTheme.highColor}
-            placeholder='Search' style={styles.textInput}
+            placeholderTextColor={theme[currentTheme].highColor}
+            placeholder='Search' style={[
+                styles.textInput,
+                {
+                    backgroundColor: theme[currentTheme].secondary,
+                    color: theme[currentTheme].highColor,
+                    borderColor: theme[currentTheme].lowColor,
+                    shadowColor: theme[currentTheme].lowColor,
+                }
+            ]}
         />
     )
 }
 
 const styles = StyleSheet.create({
     textInput: {
-        backgroundColor: lightTheme.secondary,
-        color: lightTheme.highColor,
         padding: 16.5,
         width: '90%',
         borderRadius: 15,
-        borderColor: lightTheme.lowColor,
-        shadowColor: lightTheme.lowColor,
         shadowRadius: 10,
         shadowOffset: {
             width: 10,

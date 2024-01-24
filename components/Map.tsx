@@ -1,4 +1,5 @@
-import { lightTheme } from '@/constants/constants';
+import { theme } from '@/constants/constants';
+import { useThemeContext } from '@/context/useThemeContext';
 import { MapPropType } from '@/constants/types';
 import {
     MapView,
@@ -15,6 +16,7 @@ import { StyleSheet } from 'react-native';
 import { initialCameraAnimDuration } from '@/constants/constants';
 
 const Map = ({ projectionType, cameraRef, locationRef }: MapPropType) => {
+    const { currentTheme } = useThemeContext();
     const [gotLocationOnce, setGotLocationOnce] = useState(false);
     return (
         <MapView
@@ -61,8 +63,8 @@ const Map = ({ projectionType, cameraRef, locationRef }: MapPropType) => {
             >
                 <Atmosphere
                     style={{
-                        color: lightTheme.lowColor,
-                        highColor: lightTheme.highColor,
+                        color: theme[currentTheme].lowColor,
+                        highColor: theme[currentTheme].highColor,
                         horizonBlend: 0.02,
                         spaceColor: 'white',
                         starIntensity: 0,

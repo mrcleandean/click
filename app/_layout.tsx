@@ -1,6 +1,8 @@
+import { SetStateType } from '@/constants/types';
+import { ThemeContext } from '@/context/useThemeContext';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -10,6 +12,7 @@ export {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light')
   const loaded = true;
   const error = false;
 
@@ -29,8 +32,10 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    </Stack>
+    <ThemeContext.Provider value={{ currentTheme, setCurrentTheme }}>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
+    </ThemeContext.Provider>
   )
 }

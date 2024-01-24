@@ -1,12 +1,12 @@
-import { lightTheme } from "@/constants/constants";
-import { Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { theme } from "@/constants/constants";
+import { useThemeContext } from "@/context/useThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "expo-image";
-import { globalStyles } from "@/constants/globalStyles";
 import { Link } from "expo-router";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const Stat = ({ statNum, statText }: { statNum: number, statText: string }) => {
+const Stat = ({ statNum, statText, currentTheme }: { statNum: number, statText: string, currentTheme: 'light' | 'dark' }) => {
     const statHref = `/${statText.toLowerCase()}`;
     return (
         <Link href={{
@@ -14,33 +14,34 @@ const Stat = ({ statNum, statText }: { statNum: number, statText: string }) => {
             params: { stat: statHref }
         }}>
             <View style={styles.statContainer}>
-                <Text style={styles.statNum}>{statNum}</Text>
-                <Text style={styles.statText}>{statText}</Text>
+                <Text style={[styles.statNum, { color: theme[currentTheme].highColor }]}>{statNum}</Text>
+                <Text style={[styles.statText, { color: theme[currentTheme].highColor }]}>{statText}</Text>
             </View>
         </Link>
     )
 }
 
-const Click = () => {
+const Click = ({ currentTheme }: { currentTheme: 'light' | 'dark' }) => {
     return (
-        <View style={[styles.clickContainer, globalStyles.shadowBorder]}>
+        <View style={[styles.clickContainer, theme[currentTheme].shadowBorder, { backgroundColor: theme[currentTheme].secondary }]}>
             <View style={styles.clickLeft}>
                 <View style={styles.clickStatus} />
                 <Text style={styles.clickTitle}>Click</Text>
             </View>
             <View style={styles.clickRight}>
-                <MaterialCommunityIcons name="dots-vertical" size={24} color={lightTheme.primary} />
+                <MaterialCommunityIcons name="dots-vertical" size={24} color={theme[currentTheme].primary} />
             </View>
         </View>
     )
 }
 
 const Profile = () => {
+    const { currentTheme } = useThemeContext();
     return (
-        <SafeAreaView style={styles.profileWrapper} edges={['right', 'left', 'top']}>
+        <SafeAreaView style={[styles.profileWrapper, { backgroundColor: theme[currentTheme].secondary }]} edges={['right', 'left', 'top']}>
             <View style={styles.upper}>
                 <View style={styles.upperLeft}>
-                    <View style={[styles.pictureContainer, globalStyles.shadowBorder]}>
+                    <View style={[styles.pictureContainer, theme[currentTheme].shadowBorder, { backgroundColor: theme[currentTheme].primary }]}>
                         <Image
                             style={{
                                 width: '100%',
@@ -53,22 +54,22 @@ const Profile = () => {
                 </View>
                 <View style={styles.upperRight}>
                     <View style={styles.statsWrapper}>
-                        <Stat statNum={0} statText="Posts" />
-                        <Stat statNum={0} statText="Clicks" />
-                        <Stat statNum={0} statText="Friends" />
+                        <Stat statNum={0} statText="Posts" currentTheme={currentTheme} />
+                        <Stat statNum={0} statText="Clicks" currentTheme={currentTheme} />
+                        <Stat statNum={0} statText="Friends" currentTheme={currentTheme} />
                     </View>
-                    <TouchableOpacity style={styles.editProfileButton}>
-                        <Text style={styles.editProfileText}>Edit Profile</Text>
+                    <TouchableOpacity style={[styles.editProfileButton, { backgroundColor: theme[currentTheme].secondary, borderColor: theme[currentTheme].lowColor }]}>
+                        <Text style={[styles.editProfileText, { color: theme[currentTheme].highColor }]}>Edit Profile</Text>
                     </TouchableOpacity>
                 </View>
             </View>
-            <View style={styles.midUpper}>
-                <Text style={styles.username}>Username</Text>
-                <Text style={styles.displayName}>Display Name</Text>
-                <Text style={styles.bio}>BioBio BioBio BioBio BioBio BioBio BioBio BioBio</Text>
+            <View style={[styles.midUpper, { backgroundColor: theme[currentTheme].secondary, borderColor: theme[currentTheme].lowColor }]}>
+                <Text style={[styles.username, { color: theme[currentTheme].highColor }]}>Username</Text>
+                <Text style={[styles.displayName, { color: theme[currentTheme].highColor }]}>Display Name</Text>
+                <Text style={[styles.bio, { color: theme[currentTheme].highColor }]}>BioBio BioBio BioBio BioBio BioBio BioBio BioBio</Text>
             </View>
             <ScrollView style={styles.lower} contentContainerStyle={styles.lowerContentContainer}>
-                {Array.from({ length: 40 }).map((_, i) => <Click key={i} />)}
+                {Array.from({ length: 40 }).map((_, i) => <Click currentTheme={currentTheme} key={i} />)}
             </ScrollView>
         </SafeAreaView>
     )
@@ -80,7 +81,6 @@ const styles = StyleSheet.create({
         display: 'flex',
         gap: 0,
         alignItems: 'center',
-        backgroundColor: lightTheme.secondary
     },
     upper: {
         width: '100%',
@@ -91,7 +91,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     pictureContainer: {
-        backgroundColor: lightTheme.primary,
         width: 85,
         height: 85,
         borderRadius: 20,
@@ -121,17 +120,14 @@ const styles = StyleSheet.create({
     },
     editProfileButton: {
         width: '100%',
-        backgroundColor: lightTheme.secondary,
         flex: 0.5,
         borderRadius: 10,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        borderColor: lightTheme.lowColor,
         borderWidth: 1,
     },
     editProfileText: {
-        color: lightTheme.highColor,
         padding: 5,
     },
     statContainer: {
@@ -141,16 +137,13 @@ const styles = StyleSheet.create({
     },
     statNum: {
         fontSize: 18,
-        fontWeight: 'bold',
-        color: lightTheme.highColor
+        fontWeight: 'bold'
     },
     statText: {
         fontSize: 12,
-        fontWeight: 'bold',
-        color: lightTheme.highColor
+        fontWeight: 'bold'
     },
     midUpper: {
-        backgroundColor: lightTheme.secondary,
         width: '100%',
         display: 'flex',
         gap: 5,
@@ -158,22 +151,18 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         paddingBottom: 10,
         justifyContent: 'space-around',
-        borderColor: lightTheme.lowColor,
         borderBottomWidth: 1,
     },
     username: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: lightTheme.highColor
     },
     displayName: {
         fontSize: 13.5,
-        fontWeight: 'bold',
-        color: lightTheme.highColor
+        fontWeight: 'bold'
     },
     bio: {
-        fontSize: 12.5,
-        color: lightTheme.highColor
+        fontSize: 12.5
     },
     lower: {
         width: '100%',
@@ -185,7 +174,6 @@ const styles = StyleSheet.create({
         gap: 7.5
     },
     clickContainer: {
-        backgroundColor: lightTheme.secondary,
         borderRadius: 15,
         padding: 10,
         display: 'flex',
