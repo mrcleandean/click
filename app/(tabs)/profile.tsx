@@ -23,13 +23,13 @@ const Stat = ({ statNum, statText, currentTheme }: { statNum: number, statText: 
 
 const Click = ({ currentTheme }: { currentTheme: 'light' | 'dark' }) => {
     return (
-        <View style={[styles.clickContainer, theme[currentTheme].shadowBorder, { backgroundColor: theme[currentTheme].secondary }]}>
+        <View style={[styles.clickContainer, theme[currentTheme].shadowBorder, { backgroundColor: theme[currentTheme].primary }]}>
             <View style={styles.clickLeft}>
                 <View style={styles.clickStatus} />
-                <Text style={styles.clickTitle}>Click</Text>
+                <Text style={[styles.clickTitle, { color: theme[currentTheme].secondary }]}>Click</Text>
             </View>
             <View style={styles.clickRight}>
-                <MaterialCommunityIcons name="dots-vertical" size={24} color={theme[currentTheme].primary} />
+                <MaterialCommunityIcons name="dots-vertical" size={24} color={theme[currentTheme].secondary} />
             </View>
         </View>
     )
@@ -38,10 +38,10 @@ const Click = ({ currentTheme }: { currentTheme: 'light' | 'dark' }) => {
 const Profile = () => {
     const { currentTheme } = useThemeContext();
     return (
-        <SafeAreaView style={[styles.profileWrapper, { backgroundColor: theme[currentTheme].secondary }]} edges={['right', 'left', 'top']}>
+        <SafeAreaView style={[styles.profileWrapper, { backgroundColor: theme[currentTheme].primary }]} edges={['right', 'left', 'top']}>
             <View style={styles.upper}>
                 <View style={styles.upperLeft}>
-                    <View style={[styles.pictureContainer, theme[currentTheme].shadowBorder, { backgroundColor: theme[currentTheme].primary }]}>
+                    <View style={[styles.pictureContainer, theme[currentTheme].shadowBorder, { backgroundColor: theme[currentTheme].secondary }]}>
                         <Image
                             style={{
                                 width: '100%',
@@ -58,12 +58,12 @@ const Profile = () => {
                         <Stat statNum={0} statText="Clicks" currentTheme={currentTheme} />
                         <Stat statNum={0} statText="Friends" currentTheme={currentTheme} />
                     </View>
-                    <TouchableOpacity style={[styles.editProfileButton, { backgroundColor: theme[currentTheme].secondary, borderColor: theme[currentTheme].lowColor }]}>
+                    <TouchableOpacity style={[styles.editProfileButton, { backgroundColor: theme[currentTheme].primary, borderColor: theme[currentTheme].lowColor }]}>
                         <Text style={[styles.editProfileText, { color: theme[currentTheme].highColor }]}>Edit Profile</Text>
                     </TouchableOpacity>
                 </View>
             </View>
-            <View style={[styles.midUpper, { backgroundColor: theme[currentTheme].secondary, borderColor: theme[currentTheme].lowColor }]}>
+            <View style={[styles.midUpper, { backgroundColor: theme[currentTheme].primary, borderColor: theme[currentTheme].lowColor }]}>
                 <Text style={[styles.username, { color: theme[currentTheme].highColor }]}>Username</Text>
                 <Text style={[styles.displayName, { color: theme[currentTheme].highColor }]}>Display Name</Text>
                 <Text style={[styles.bio, { color: theme[currentTheme].highColor }]}>BioBio BioBio BioBio BioBio BioBio BioBio BioBio</Text>
