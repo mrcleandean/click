@@ -10,7 +10,7 @@ const SearchBar = () => {
             placeholder='Search' style={[
                 styles.textInput,
                 {
-                    backgroundColor: theme[currentTheme].secondary,
+                    backgroundColor: theme[currentTheme].primary,
                     color: theme[currentTheme].highColor,
                     borderColor: theme[currentTheme].lowColor,
                     shadowColor: theme[currentTheme].lowColor,

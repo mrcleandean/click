@@ -22,7 +22,7 @@ const Map = ({ projectionType, cameraRef, locationRef }: MapPropType) => {
         <MapView
             style={styles.container}
             projection={projectionType}
-            styleURL={'mapbox://styles/mapbox/light-v11'}
+            styleURL={currentTheme === 'light' ? 'mapbox://styles/mapbox/light-v11' : 'mapbox://styles/mapbox/dark-v11'}
             logoEnabled={false}
             attributionEnabled={false}
             pitchEnabled={false}
@@ -66,8 +66,8 @@ const Map = ({ projectionType, cameraRef, locationRef }: MapPropType) => {
                         color: theme[currentTheme].lowColor,
                         highColor: theme[currentTheme].highColor,
                         horizonBlend: 0.02,
-                        spaceColor: 'white',
-                        starIntensity: 0,
+                        spaceColor: theme[currentTheme].primary,
+                        starIntensity: currentTheme === 'light' ? 0 : 0.1,
                     }}
                 />
                 <SkyLayer

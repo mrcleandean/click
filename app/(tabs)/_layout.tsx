@@ -34,6 +34,7 @@ export default function TabLayout() {
             height: -2
           },
           shadowOpacity: 1,
+          backgroundColor: theme[currentTheme].primary,
         },
         tabBarShowLabel: false
       }}>

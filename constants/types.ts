@@ -15,3 +15,4 @@ export type ThemeContextType = {
     currentTheme: 'light' | 'dark';
     setCurrentTheme: SetStateType<'light' | 'dark'>
 }
+export type CenterButtonPropType = { cameraRef: MutableRefObject<CameraRef | null>, locationRef: MutableRefObject<Location | null>, currentTheme: 'light' | 'dark' }

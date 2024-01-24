@@ -1,7 +1,7 @@
 export const theme = {
     light: {
-        primary: '#dbdbdc',
-        secondary: 'white',
+        primary: 'white',
+        secondary: '#dbdbdc',
         lowColor: 'rgb(186, 210, 235)',
         highColor: 'black',
         shadowBorder: {
@@ -17,14 +17,14 @@ export const theme = {
         }
     },
     dark: {
-        primary: 'white',
+        primary: 'black',
         secondary: '#dbdbdc',
-        lowColor: 'rbg(186, 210, 235)',
+        lowColor: 'rgb(186, 210, 235)',
         highColor: 'white',
         shadowBorder: {
-            borderColor: 'rbg(186, 210, 235)',
+            borderColor: 'rgb(186, 210, 235)',
             borderWidth: 2,
-            shadowColor: 'rbg(186, 210, 235)',
+            shadowColor: 'rgb(186, 210, 235)',
             shadowRadius: 10,
             shadowOffset: {
                 width: 10,

@@ -7,7 +7,7 @@ const MapViewButton = ({ projectionType, setProjectionType }: InteractionsPropTy
     const { currentTheme } = useThemeContext();
     return (
         <TouchableOpacity
-            style={[styles.pressable, theme[currentTheme].shadowBorder, { backgroundColor: theme[currentTheme].secondary }]}
+            style={[styles.pressable, theme[currentTheme].shadowBorder, { backgroundColor: theme[currentTheme].primary }]}
             onPress={() => setProjectionType(projectionType === 'globe' ? 'mercator' : 'globe')}
         >
             <Text style={[styles.text, { color: theme[currentTheme].highColor }]}>{projectionType === 'globe' ? 'Map View' : 'Globe View'}</Text>
