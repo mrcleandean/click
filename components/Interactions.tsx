@@ -1,6 +1,8 @@
 import { StyleSheet, View } from "react-native";
 import type { InteractionsPropType } from "@/constants/types";
-import { SearchBar, MapViewButton } from "@/components";
+// To prevent cycle, we need to import SearchBar and MapViewButton from components/ComponentName
+import SearchBar from "@/components/SearchBar";
+import MapViewButton from "@/components/MapViewButton";
 
 const Interactions = ({ projectionType, setProjectionType }: InteractionsPropType) => {
     return (
