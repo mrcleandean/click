@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Tabs, usePathname } from 'expo-router';
 import { FontAwesome5, Feather } from '@expo/vector-icons';
-import { theme } from '@/constants/constants';
+import { tabBarHeight, theme } from '@/constants/constants';
 import { useThemeContext } from '@/context/useThemeContext';
 
 export default function TabLayout() {
@@ -28,13 +28,16 @@ export default function TabLayout() {
         headerShown: false,
         tabBarStyle: {
           shadowColor: theme[currentTheme].lowColor,
-          shadowRadius: 20,
+          shadowRadius: 3,
           shadowOffset: {
             width: 0,
-            height: -2
+            height: -0.5
           },
           shadowOpacity: 1,
           backgroundColor: theme[currentTheme].primary,
+          height: tabBarHeight,
+          position: pathname === '/create' ? 'absolute' : 'relative',
+          opacity: pathname === '/create' ? (currentTheme === 'dark' ? 0.7 : 0.8) : 1
         },
         tabBarShowLabel: false
       }}>

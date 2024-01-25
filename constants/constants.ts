@@ -79,5 +79,5 @@ const createCameraConstants = () => {
     }
 }
 export const cameraConstants = createCameraConstants();
-
+export const tabBarHeight = 79;
 export const initialCameraAnimDuration = 850;

@@ -3,6 +3,7 @@ import { ThemeContext } from '@/context/useThemeContext';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { createContext, useContext, useEffect, useState } from 'react';
+import { SafeAreaInsetsContext, SafeAreaProvider } from 'react-native-safe-area-context';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -33,9 +34,11 @@ export default function RootLayout() {
 
   return (
     <ThemeContext.Provider value={{ currentTheme, setCurrentTheme }}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
+      <SafeAreaProvider>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+      </SafeAreaProvider>
     </ThemeContext.Provider>
   )
 }

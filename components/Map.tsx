@@ -9,9 +9,10 @@ import {
     Atmosphere,
     Camera,
     LocationPuck,
-    UserLocation
+    UserLocation,
+    StyleURL
 } from '@rnmapbox/maps';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { initialCameraAnimDuration } from '@/constants/constants';
 
@@ -22,7 +23,7 @@ const Map = ({ projectionType, cameraRef, locationRef }: MapPropType) => {
         <MapView
             style={styles.container}
             projection={projectionType}
-            styleURL={currentTheme === 'light' ? 'mapbox://styles/mapbox/light-v11' : 'mapbox://styles/mapbox/dark-v11'}
+            styleURL={currentTheme === 'light' ? StyleURL.Light : StyleURL.Dark}
             logoEnabled={false}
             attributionEnabled={false}
             pitchEnabled={false}
@@ -37,6 +38,16 @@ const Map = ({ projectionType, cameraRef, locationRef }: MapPropType) => {
                     }
                     locationRef.current = newLocation;
                 }}
+                visible={false}
+            />
+            <LocationPuck
+                visible={true}
+                scale={['interpolate', ['linear'], ['zoom'], 15, 1.0, 20, 4.0]}
+                pulsing={{
+                    isEnabled: true,
+                    color: 'teal',
+                    radius: 30.0,
+                }}
             />
             <Camera
                 defaultSettings={{
@@ -45,15 +56,6 @@ const Map = ({ projectionType, cameraRef, locationRef }: MapPropType) => {
                     pitch: 0
                 }}
                 ref={cameraRef}
-            />
-            <LocationPuck
-                visible={true}
-                scale={['interpolate', ['linear'], ['zoom'], 10, 1.0, 20, 4.0]}
-                pulsing={{
-                    isEnabled: true,
-                    color: 'teal',
-                    radius: 50.0,
-                }}
             />
             <RasterDemSource
                 id="mapbox-dem"

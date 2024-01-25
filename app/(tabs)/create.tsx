@@ -1,14 +1,14 @@
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native"
-import { useCameraDevice, Camera, useCameraFormat, CameraRuntimeError, PhotoFile, VideoFile, useFrameProcessor } from "react-native-vision-camera";
+import { useCameraDevice, Camera, useCameraFormat, CameraRuntimeError, PhotoFile, VideoFile, useFrameProcessor, useCameraPermission } from "react-native-vision-camera";
 import { frameProcessorKotlinSwiftPlugin, frameProcessorPlugin, useIsForeground, usePreferredCameraDevice } from "@/hooks";
 import Reanimated, { interpolate, useAnimatedProps, useSharedValue, Extrapolation } from "react-native-reanimated";
-import { Gesture, GestureDetector, TapGestureHandler } from 'react-native-gesture-handler'
+import { Gesture, GestureDetector, GestureHandlerRootView, TapGestureHandler } from 'react-native-gesture-handler'
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { CaptureButton, StatusBarBlurBackground } from "@/components";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { cameraConstants } from "@/constants/constants";
+import { cameraConstants, tabBarHeight } from "@/constants/constants";
 
 const ReanimatedCamera = Reanimated.createAnimatedComponent(Camera);
 Reanimated.addWhitelistedNativeProps({
@@ -16,6 +16,9 @@ Reanimated.addWhitelistedNativeProps({
 });
 
 const Create = () => {
+    const { hasPermission, requestPermission } = useCameraPermission();
+    requestPermission();
+    // if (hasPermission === false) return;
     const insets = useSafeAreaInsets();
     const camera = useRef<Camera | null>(null);
     const [isCameraInitialized, setIsCameraInitialized] = useState(false);
@@ -121,94 +124,96 @@ const Create = () => {
                 : undefined
         console.log(`Camera: ${device?.name} | Format: ${f}`)
     }, [device?.name, format, fps]);
-    const frameProcessor = useFrameProcessor((frame) => {
-        'worklet'
+    // const frameProcessor = useFrameProcessor((frame) => {
+    //     'worklet'
 
-        console.log(`${frame.timestamp}: ${frame.width}x${frame.height} ${frame.pixelFormat} Frame (${frame.orientation})`)
-        frameProcessorPlugin(frame)
-        frameProcessorKotlinSwiftPlugin(frame)
-    }, []);
+    //     console.log(`${frame.timestamp}: ${frame.width}x${frame.height} ${frame.pixelFormat} Frame (${frame.orientation})`)
+    //     frameProcessorPlugin(frame)
+    //     frameProcessorKotlinSwiftPlugin(frame)
+    // }, []);
     return (
         <View style={styles.container}>
-            {device != null && (
-                <GestureDetector gesture={onPinchGesture}>
-                    <Reanimated.View style={StyleSheet.absoluteFill}>
-                        <TapGestureHandler onEnded={onDoubleTap} numberOfTaps={2}>
-                            <ReanimatedCamera
-                                ref={camera}
-                                style={StyleSheet.absoluteFill}
-                                device={device}
-                                format={format}
-                                fps={fps}
-                                photoHdr={enableHdr}
-                                videoHdr={enableHdr}
-                                lowLightBoost={device.supportsLowLightBoost && enableNightMode}
-                                isActive={isActive}
-                                onInitialized={onInitialized}
-                                onError={onError}
-                                enableZoomGesture={false}
-                                animatedProps={cameraAnimatedProps}
-                                exposure={0}
-                                enableFpsGraph={true}
-                                orientation="portrait"
-                                photo={true}
-                                video={true}
-                                audio={hasMicrophonePermission}
-                                frameProcessor={frameProcessor}
-                            />
-                        </TapGestureHandler>
-                    </Reanimated.View>
-                </GestureDetector>
-            )}
+            <GestureHandlerRootView>
+                {device != null && (
+                    <GestureDetector gesture={onPinchGesture}>
+                        <Reanimated.View style={{ width: Dimensions.get('window').width, height: Dimensions.get('screen').height }}>
+                            <TapGestureHandler onEnded={onDoubleTap} numberOfTaps={2}>
+                                <ReanimatedCamera
+                                    ref={camera}
+                                    style={{ width: Dimensions.get('window').width, height: Dimensions.get('screen').height }}
+                                    device={device}
+                                    format={format}
+                                    fps={fps}
+                                    photoHdr={enableHdr}
+                                    videoHdr={enableHdr}
+                                    lowLightBoost={device.supportsLowLightBoost && enableNightMode}
+                                    isActive={isActive}
+                                    onInitialized={onInitialized}
+                                    onError={onError}
+                                    enableZoomGesture={false}
+                                    animatedProps={cameraAnimatedProps}
+                                    exposure={0}
+                                    enableFpsGraph={true}
+                                    orientation="portrait"
+                                    photo={true}
+                                    video={true}
+                                    audio={hasMicrophonePermission}
+                                // frameProcessor={frameProcessor}
+                                />
+                            </TapGestureHandler>
+                        </Reanimated.View>
+                    </GestureDetector>
+                )}
 
-            <CaptureButton
-                style={[styles.captureButton, { bottom: cameraConstants.safeAreaPadding(insets).paddingBottom }]}
-                camera={camera}
-                onMediaCaptured={onMediaCaptured}
-                cameraZoom={zoom}
-                minZoom={minZoom}
-                maxZoom={maxZoom}
-                flash={supportsFlash ? flash : 'off'}
-                enabled={isCameraInitialized && isActive}
-                setIsPressingButton={setIsPressingButton}
-            />
+                <CaptureButton
+                    style={[styles.captureButton, { bottom: cameraConstants.safeAreaPadding(insets).paddingBottom + tabBarHeight / 1.5 }]}
+                    camera={camera}
+                    onMediaCaptured={onMediaCaptured}
+                    cameraZoom={zoom}
+                    minZoom={minZoom}
+                    maxZoom={maxZoom}
+                    flash={supportsFlash ? flash : 'off'}
+                    enabled={isCameraInitialized && isActive}
+                    setIsPressingButton={setIsPressingButton}
+                />
 
-            <StatusBarBlurBackground />
+                <StatusBarBlurBackground />
 
-            <View style={[styles.rightButtonRow, {
-                right: cameraConstants.safeAreaPadding(insets).paddingRight,
-                top: cameraConstants.safeAreaPadding(insets).paddingTop
-            }]}>
-                <TouchableOpacity style={styles.button} onPress={onFlipCameraPressed}>
-                    <Ionicons name="camera-reverse" color="white" size={24} />
-                </TouchableOpacity>
-                {supportsFlash && (
-                    <TouchableOpacity style={styles.button} onPress={onFlashPressed}>
-                        <Ionicons name={flash === 'on' ? 'flash' : 'flash-off'} color="white" size={24} />
+                <View style={[styles.rightButtonRow, {
+                    right: cameraConstants.safeAreaPadding(insets).paddingRight,
+                    top: cameraConstants.safeAreaPadding(insets).paddingTop
+                }]}>
+                    <TouchableOpacity style={styles.button} onPress={onFlipCameraPressed}>
+                        <Ionicons name="camera-reverse" color="white" size={24} />
                     </TouchableOpacity>
-                )}
-                {supports60Fps && (
-                    <TouchableOpacity style={styles.button} onPress={() => setTargetFps((t) => (t === 30 ? 60 : 30))}>
-                        <Text style={styles.text}>{`${targetFps}\nFPS`}</Text>
+                    {supportsFlash && (
+                        <TouchableOpacity style={styles.button} onPress={onFlashPressed}>
+                            <Ionicons name={flash === 'on' ? 'flash' : 'flash-off'} color="white" size={24} />
+                        </TouchableOpacity>
+                    )}
+                    {supports60Fps && (
+                        <TouchableOpacity style={styles.button} onPress={() => setTargetFps((t) => (t === 30 ? 60 : 30))}>
+                            <Text style={styles.text}>{`${targetFps}\nFPS`}</Text>
+                        </TouchableOpacity>
+                    )}
+                    {supportsHdr && (
+                        <TouchableOpacity style={styles.button} onPress={() => setEnableHdr((h) => !h)}>
+                            <MaterialIcons name={enableHdr ? 'hdr-on' : 'hdr-off'} color="white" size={24} />
+                        </TouchableOpacity>
+                    )}
+                    {canToggleNightMode && (
+                        <TouchableOpacity style={styles.button} onPress={() => setEnableNightMode(!enableNightMode)}>
+                            <Ionicons name={enableNightMode ? 'moon' : 'moon-outline'} color="white" size={24} />
+                        </TouchableOpacity>
+                    )}
+                    <TouchableOpacity style={styles.button} onPress={() => {/*router.push('/devices')*/ }}>
+                        <Ionicons name="settings-outline" color="white" size={24} />
                     </TouchableOpacity>
-                )}
-                {supportsHdr && (
-                    <TouchableOpacity style={styles.button} onPress={() => setEnableHdr((h) => !h)}>
-                        <MaterialIcons name={enableHdr ? 'hdr-on' : 'hdr-off'} color="white" size={24} />
+                    <TouchableOpacity style={styles.button} onPress={() => {/*router.push('/codescannerpage')*/ }}>
+                        <Ionicons name="qr-code-outline" color="white" size={24} />
                     </TouchableOpacity>
-                )}
-                {canToggleNightMode && (
-                    <TouchableOpacity style={styles.button} onPress={() => setEnableNightMode(!enableNightMode)}>
-                        <Ionicons name={enableNightMode ? 'moon' : 'moon-outline'} color="white" size={24} />
-                    </TouchableOpacity>
-                )}
-                <TouchableOpacity style={styles.button} onPress={() => {/*router.push('/devices')*/ }}>
-                    <Ionicons name="settings-outline" color="white" size={24} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => {/*router.push('/codescannerpage')*/ }}>
-                    <Ionicons name="qr-code-outline" color="white" size={24} />
-                </TouchableOpacity>
-            </View>
+                </View>
+            </GestureHandlerRootView>
         </View>
     )
 }

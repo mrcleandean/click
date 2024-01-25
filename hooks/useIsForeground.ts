@@ -7,7 +7,8 @@ const useIsForeground = () => {
         const onChange = (state: AppStateStatus): void => {
             setIsForeground(state === 'active')
         }
-        const listener = AppState.addEventListener('change', onChange)
+        onChange(AppState.currentState);
+        const listener = AppState.addEventListener('change', onChange);
         return () => listener.remove();
     }, [setIsForeground]);
 
