@@ -22,7 +22,6 @@ const Create = () => {
     const hasMicrophonePermission = useMemo(() => Camera.getMicrophonePermissionStatus() === 'granted', []);
     const zoom = useSharedValue(0);
     const isPressingButton = useSharedValue(false)
-
     const [isFocused, setIsFocused] = useState(false);
     useFocusEffect(
         useCallback(() => {
@@ -36,11 +35,9 @@ const Create = () => {
     const [enableHdr, setEnableHdr] = useState(false);
     const [flash, setFlash] = useState<'off' | 'on'>('off');
     const [enableNightMode, setEnableNightMode] = useState(false);
-
     const [preferredDevice] = usePreferredCameraDevice();
     let device = useCameraDevice(cameraPosition);
     if (preferredDevice != null && preferredDevice.position === cameraPosition) {
-        // override default device with the one selected by the user in settings
         device = preferredDevice
     }
     const [targetFps, setTargetFps] = useState(60);
@@ -57,33 +54,27 @@ const Create = () => {
     const supportsHdr = format?.supportsPhotoHdr;
     const supports60Fps = useMemo(() => device?.formats.some((f) => f.maxFps >= 60), [device?.formats]);
     const canToggleNightMode = device?.supportsLowLightBoost ?? false;
-
     const minZoom = device?.minZoom ?? 1
     const maxZoom = Math.min(device?.maxZoom ?? 1, cameraConstants.maxZoomFactor)
-
     const cameraAnimatedProps = useAnimatedProps(() => {
         const z = Math.max(Math.min(zoom.value, maxZoom), minZoom)
         return {
             zoom: z,
         }
     }, [maxZoom, minZoom, zoom]);
-
     const setIsPressingButton = useCallback(
         (_isPressingButton: boolean) => {
             isPressingButton.value = _isPressingButton
         },
         [isPressingButton],
     );
-
     const onError = useCallback((error: CameraRuntimeError) => {
         console.error(error)
     }, []);
-
     const onInitialized = useCallback(() => {
         console.log('Camera initialized!')
         setIsCameraInitialized(true)
     }, []);
-
     const onMediaCaptured = useCallback(
         (media: PhotoFile | VideoFile, type: 'photo' | 'video') => {
             console.log(`Media captured! ${JSON.stringify(media)}`)
@@ -107,13 +98,11 @@ const Create = () => {
     const onDoubleTap = useCallback(() => {
         onFlipCameraPressed()
     }, [onFlipCameraPressed]);
-
     const neutralZoom = device?.neutralZoom ?? 1;
     useEffect(() => {
         // Run everytime the neutralZoomScaled value changes. (reset zoom when device changes)
         zoom.value = neutralZoom
     }, [neutralZoom, zoom]);
-
     const pinchContext = useRef<number | null>(null)
     const onPinchGesture = Gesture.Pinch().onStart((event) => {
         pinchContext.current = zoom.value
@@ -125,7 +114,6 @@ const Create = () => {
     }).onEnd(() => {
         pinchContext.current = null
     });
-
     useEffect(() => {
         const f =
             format != null
@@ -133,15 +121,13 @@ const Create = () => {
                 : undefined
         console.log(`Camera: ${device?.name} | Format: ${f}`)
     }, [device?.name, format, fps]);
+    // const frameProcessor = useFrameProcessor((frame) => {
+    //     'worklet'
 
-    const frameProcessor = useFrameProcessor((frame) => {
-        'worklet'
-
-        console.log(`${frame.timestamp}: ${frame.width}x${frame.height} ${frame.pixelFormat} Frame (${frame.orientation})`)
-        frameProcessorPlugin(frame)
-        frameProcessorKotlinSwiftPlugin(frame)
-    }, []);
-
+    //     console.log(`${frame.timestamp}: ${frame.width}x${frame.height} ${frame.pixelFormat} Frame (${frame.orientation})`)
+    //     frameProcessorPlugin(frame)
+    //     frameProcessorKotlinSwiftPlugin(frame)
+    // }, []);
     return (
         <View style={styles.container}>
             {device != null && (
@@ -168,7 +154,7 @@ const Create = () => {
                                 photo={true}
                                 video={true}
                                 audio={hasMicrophonePermission}
-                                frameProcessor={frameProcessor}
+                            // frameProcessor={frameProcessor}
                             />
                         </TapGestureHandler>
                     </Reanimated.View>
