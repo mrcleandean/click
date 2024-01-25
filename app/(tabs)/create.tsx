@@ -121,13 +121,13 @@ const Create = () => {
                 : undefined
         console.log(`Camera: ${device?.name} | Format: ${f}`)
     }, [device?.name, format, fps]);
-    // const frameProcessor = useFrameProcessor((frame) => {
-    //     'worklet'
+    const frameProcessor = useFrameProcessor((frame) => {
+        'worklet'
 
-    //     console.log(`${frame.timestamp}: ${frame.width}x${frame.height} ${frame.pixelFormat} Frame (${frame.orientation})`)
-    //     frameProcessorPlugin(frame)
-    //     frameProcessorKotlinSwiftPlugin(frame)
-    // }, []);
+        console.log(`${frame.timestamp}: ${frame.width}x${frame.height} ${frame.pixelFormat} Frame (${frame.orientation})`)
+        frameProcessorPlugin(frame)
+        frameProcessorKotlinSwiftPlugin(frame)
+    }, []);
     return (
         <View style={styles.container}>
             {device != null && (
@@ -154,7 +154,7 @@ const Create = () => {
                                 photo={true}
                                 video={true}
                                 audio={hasMicrophonePermission}
-                            // frameProcessor={frameProcessor}
+                                frameProcessor={frameProcessor}
                             />
                         </TapGestureHandler>
                     </Reanimated.View>
