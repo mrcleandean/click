@@ -4,5 +4,6 @@ import MapViewButton from "./MapViewButton";
 import Map from "./Map";
 import ThemeSwitch from "./ThemeSwitch";
 import CenterButton from "./CenterButton";
-
-export { Interactions, SearchBar, MapViewButton, Map, ThemeSwitch, CenterButton };
+import CaptureButton from "./CaptureButton";
+import StatusBarBlurBackground from "./StatusBarBackground";
+export { Interactions, SearchBar, MapViewButton, Map, ThemeSwitch, CenterButton, CaptureButton, StatusBarBlurBackground };
