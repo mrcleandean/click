@@ -13,7 +13,6 @@ export default function Home() {
   const [projectionType, setProjectionType] = useState<ProjectionType>('globe');
   const cameraRef = useRef<Camera | null>(null);
   const locationRef = useRef<Location | null>(null);
-
   return (
     <TouchableWithoutFeedback onPress={() => {
       Keyboard.dismiss();

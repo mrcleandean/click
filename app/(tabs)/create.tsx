@@ -6,7 +6,7 @@ import { frameProcessorKotlinSwiftPlugin, frameProcessorPlugin, useIsForeground,
 import Reanimated, { interpolate, useAnimatedProps, useSharedValue, Extrapolation } from "react-native-reanimated";
 import { Gesture, GestureDetector, GestureHandlerRootView, TapGestureHandler } from 'react-native-gesture-handler'
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { CaptureButton, StatusBarBlurBackground } from "@/components";
+import { CaptureButton } from "@/components";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { cameraConstants, tabBarHeight } from "@/constants/constants";
 
@@ -176,8 +176,6 @@ const Create = () => {
                     enabled={isCameraInitialized && isActive}
                     setIsPressingButton={setIsPressingButton}
                 />
-
-                <StatusBarBlurBackground />
 
                 <View style={[styles.rightButtonRow, {
                     right: cameraConstants.safeAreaPadding(insets).paddingRight,

@@ -12,7 +12,7 @@ import {
     UserLocation,
     StyleURL
 } from '@rnmapbox/maps';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { initialCameraAnimDuration } from '@/constants/constants';
 
@@ -23,7 +23,7 @@ const Map = ({ projectionType, cameraRef, locationRef }: MapPropType) => {
         <MapView
             style={styles.container}
             projection={projectionType}
-            styleURL={currentTheme === 'light' ? StyleURL.Light : StyleURL.Dark}
+            styleJSON={currentTheme === 'light' ? StyleURL.Light : StyleURL.Dark}
             logoEnabled={false}
             attributionEnabled={false}
             pitchEnabled={false}

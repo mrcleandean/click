@@ -3,6 +3,7 @@ import { Tabs, usePathname } from 'expo-router';
 import { FontAwesome5, Feather } from '@expo/vector-icons';
 import { tabBarHeight, theme } from '@/constants/constants';
 import { useThemeContext } from '@/context/useThemeContext';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function TabLayout() {
   const [activeRoute, setActiveRoute] = useState<'globe' | 'create' | 'profile'>('globe');
@@ -37,7 +38,7 @@ export default function TabLayout() {
           backgroundColor: theme[currentTheme].primary,
           height: tabBarHeight,
           position: pathname === '/create' ? 'absolute' : 'relative',
-          opacity: pathname === '/create' ? (currentTheme === 'dark' ? 0.7 : 0.8) : 1
+          opacity: pathname === '/create' ? (currentTheme === 'dark' ? 0.7 : 0.8) : 1,
         },
         tabBarShowLabel: false
       }}>

@@ -9,14 +9,14 @@ export const theme = {
         highColor: 'black',
         shadowBorder: {
             borderColor: 'rgb(186, 210, 235)',
-            borderWidth: 2,
-            shadowColor: 'rgb(186, 210, 235)',
-            shadowRadius: 10,
-            shadowOffset: {
-                width: 10,
-                height: 5
-            },
-            shadowOpacity: 1
+            borderWidth: 1,
+            // shadowColor: 'rgb(186, 210, 235)',
+            // shadowRadius: 10,
+            // shadowOffset: {
+            //     width: 10,
+            //     height: 5
+            // },
+            // shadowOpacity: 1
         }
     },
     dark: {
@@ -26,14 +26,14 @@ export const theme = {
         highColor: 'white',
         shadowBorder: {
             borderColor: 'rgb(186, 210, 235)',
-            borderWidth: 2,
-            shadowColor: 'rgb(186, 210, 235)',
-            shadowRadius: 10,
-            shadowOffset: {
-                width: 10,
-                height: 5
-            },
-            shadowOpacity: 1
+            borderWidth: 1,
+            // shadowColor: 'rgb(186, 210, 235)',
+            // shadowRadius: 10,
+            // shadowOffset: {
+            //     width: 10,
+            //     height: 5
+            // },
+            // shadowOpacity: 1
         }
     }
     // highColor: 'rgb(36, 92, 223)'
