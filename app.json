@@ -46,7 +46,15 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "Show current location on map."
+          "locationWhenInUsePermission": "Show current location on map"
+        }
+      ],
+      [
+        "react-native-vision-camera",
+        {
+          "cameraPermissionText": "Click needs access to your Camera.",
+          "enableMicrophonePermission": true,
+          "microphonePermissionText": "Click needs access to your Microphone."
         }
       ]
     ],
