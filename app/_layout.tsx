@@ -1,9 +1,8 @@
-import { SetStateType } from '@/constants/types';
 import { ThemeContext } from '@/context/useThemeContext';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { createContext, useContext, useEffect, useState } from 'react';
-import { SafeAreaInsetsContext, SafeAreaProvider } from 'react-native-safe-area-context';
+import { useEffect, useState } from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 export {
   // Catch any errors thrown by the Layout component.
