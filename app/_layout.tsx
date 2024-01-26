@@ -2,6 +2,7 @@ import { StatusBarBackground } from '@/components';
 import { ThemeContext } from '@/context/useThemeContext';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { NativeBaseProvider } from 'native-base';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -35,14 +36,16 @@ export default function RootLayout() {
 
   return (
     <ThemeContext.Provider value={{ currentTheme, setCurrentTheme }}>
-      <SafeAreaProvider>
-        <View style={{ flex: 1 }}>
-          <StatusBarBackground />
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          </Stack>
-        </View>
-      </SafeAreaProvider>
+      <NativeBaseProvider>
+        <SafeAreaProvider>
+          <View style={{ flex: 1 }}>
+            <StatusBarBackground />
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            </Stack>
+          </View>
+        </SafeAreaProvider>
+      </NativeBaseProvider>
     </ThemeContext.Provider>
   )
 }

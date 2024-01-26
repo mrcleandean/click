@@ -16,13 +16,13 @@ const Interactions = ({ projectionType, setProjectionType }: InteractionsPropTyp
 const styles = StyleSheet.create({
     interactionsWrapper: {
         position: 'absolute',
-        top: 75,
+        top: 15,
         width: '100%',
         borderRadius: 10,
         zIndex: 2,
         display: 'flex',
         alignItems: 'center',
-        gap: 10,
+        gap: 5,
     }
 })
 

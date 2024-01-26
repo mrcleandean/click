@@ -18,7 +18,7 @@ const CenterButton = ({ cameraRef, locationRef, currentTheme }: CenterButtonProp
 
 const styles = StyleSheet.create({
     centerButton: {
-        padding: 10,
+        padding: 9,
         borderRadius: 50,
         position: 'absolute',
         bottom: 27.5,

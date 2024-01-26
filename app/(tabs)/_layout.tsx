@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Tabs, usePathname } from 'expo-router';
 import { FontAwesome5, Feather } from '@expo/vector-icons';
-import { tabBarHeight, theme } from '@/constants/constants';
+import { headerHeight, tabBarHeight, theme } from '@/constants/constants';
 import { useThemeContext } from '@/context/useThemeContext';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View } from 'react-native';
 
 export default function TabLayout() {
   const [activeRoute, setActiveRoute] = useState<'globe' | 'create' | 'profile'>('globe');
@@ -57,7 +57,32 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          tabBarIcon: () => <Feather name="user" size={24} color={activeRoute === 'profile' ? theme[currentTheme].highColor : theme[currentTheme].lowColor} />
+          tabBarIcon: () => <Feather name="user" size={24} color={activeRoute === 'profile' ? theme[currentTheme].highColor : theme[currentTheme].lowColor} />,
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: theme[currentTheme].primary,
+            borderBottomColor: theme[currentTheme].highColor,
+            borderBottomWidth: 1,
+            height: headerHeight
+          },
+          headerTitleStyle: {
+            color: theme[currentTheme].highColor
+          },
+          headerTitle: 'deankadri',
+          headerLeft: () => {
+            return (
+              <View className='ml-3'>
+                <Feather name="chevron-left" size={28.5} color={theme[currentTheme].highColor} />
+              </View>
+            )
+          },
+          headerRight: () => {
+            return (
+              <View className='mr-3'>
+                <Feather name="settings" size={25.5} color={theme[currentTheme].highColor} />
+              </View>
+            )
+          }
         }}
       />
     </Tabs>

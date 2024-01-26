@@ -1,4 +1,4 @@
-import { StyleSheet, SafeAreaView, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { StyleSheet, TouchableWithoutFeedback, Keyboard, View, SafeAreaView } from 'react-native';
 import Mapbox, { Camera, Location, Logger } from '@rnmapbox/maps';
 import { useRef, useState } from 'react';
 import { ProjectionType } from '@/constants/types';
@@ -18,12 +18,14 @@ export default function Home() {
       Keyboard.dismiss();
     }}>
       <SafeAreaView style={styles.container}>
-        <Interactions projectionType={projectionType} setProjectionType={setProjectionType} />
-        <Map projectionType={projectionType} cameraRef={cameraRef} locationRef={locationRef} />
-        <CenterButton cameraRef={cameraRef} locationRef={locationRef} currentTheme={currentTheme} />
-        <ThemeSwitch currentTheme={currentTheme} />
-      </SafeAreaView >
-    </TouchableWithoutFeedback>
+        <View style={styles.container}>
+          <Interactions projectionType={projectionType} setProjectionType={setProjectionType} />
+          <Map projectionType={projectionType} cameraRef={cameraRef} locationRef={locationRef} />
+          <CenterButton cameraRef={cameraRef} locationRef={locationRef} currentTheme={currentTheme} />
+          <ThemeSwitch currentTheme={currentTheme} />
+        </View>
+      </SafeAreaView>
+    </TouchableWithoutFeedback >
   );
 }
 
