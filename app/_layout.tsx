@@ -1,6 +1,6 @@
 import { StatusBarBackground } from '@/components';
 import { ThemeContext } from '@/context/useThemeContext';
-import { Stack } from 'expo-router';
+import { Stack, usePathname } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { NativeBaseProvider } from 'native-base';
 import { useEffect, useState } from 'react';
@@ -16,6 +16,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light')
+  const pathname = usePathname();
   const loaded = true;
   const error = false;
 
@@ -27,8 +28,10 @@ export default function RootLayout() {
 
   useEffect(() => {
     // Hide splash screen on future asset loads from here.
-    SplashScreen.hideAsync();
-  }, [loaded]);
+    if (loaded && pathname !== '/') {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, pathname]);
 
   if (!loaded) {
     return null;
@@ -40,8 +43,8 @@ export default function RootLayout() {
         <SafeAreaProvider>
           <View style={{ flex: 1 }}>
             <StatusBarBackground />
-            <Stack>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="(tabs)" />
             </Stack>
           </View>
         </SafeAreaProvider>

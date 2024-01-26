@@ -65,30 +65,26 @@ const Create = () => {
             zoom: z,
         }
     }, [maxZoom, minZoom, zoom]);
+
     const setIsPressingButton = useCallback(
         (_isPressingButton: boolean) => {
             isPressingButton.value = _isPressingButton
         },
         [isPressingButton],
     );
+
     const onError = useCallback((error: CameraRuntimeError) => {
         console.error(error)
     }, []);
+
     const onInitialized = useCallback(() => {
         console.log('Camera initialized!')
         setIsCameraInitialized(true)
     }, []);
-    const onMediaCaptured = useCallback(
-        (media: PhotoFile | VideoFile, type: 'photo' | 'video') => {
-            console.log(`Media captured! ${JSON.stringify(media)}`)
-            // router.push('/somepagelater');
-            // navigation.navigate('MediaPage', {
-            //     path: media.path,
-            //     type: type,
-            // })
-        },
-        [{ /*navigation*/ }],
-    );
+
+    const onMediaCaptured = useCallback((media: PhotoFile | VideoFile, type: 'photo' | 'video') => {
+        router.push({ pathname: '/(tabs)/create/preview', params: { uri: `file://${media.path}`, type } });
+    }, []);
 
     const onFlipCameraPressed = useCallback(() => {
         setCameraPosition((p) => (p === 'back' ? 'front' : 'back'))
@@ -101,6 +97,7 @@ const Create = () => {
     const onDoubleTap = useCallback(() => {
         onFlipCameraPressed()
     }, [onFlipCameraPressed]);
+
     const neutralZoom = device?.neutralZoom ?? 1;
     useEffect(() => {
         // Run everytime the neutralZoomScaled value changes. (reset zoom when device changes)
@@ -204,10 +201,10 @@ const Create = () => {
                             <Ionicons name={enableNightMode ? 'moon' : 'moon-outline'} color="white" size={24} />
                         </TouchableOpacity>
                     )}
-                    <TouchableOpacity style={styles.button} onPress={() => {/*router.push('/devices')*/ }}>
+                    <TouchableOpacity style={styles.button} onPress={() => router.push('/(tabs)/create/devices')}>
                         <Ionicons name="settings-outline" color="white" size={24} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={() => {/*router.push('/codescannerpage')*/ }}>
+                    <TouchableOpacity style={styles.button} onPress={() => router.push('/(tabs)/create/scanner')}>
                         <Ionicons name="qr-code-outline" color="white" size={24} />
                     </TouchableOpacity>
                 </View>

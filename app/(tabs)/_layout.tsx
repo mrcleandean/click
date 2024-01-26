@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Tabs, usePathname } from 'expo-router';
+import { Tabs, router, usePathname } from 'expo-router';
 import { FontAwesome5, Feather } from '@expo/vector-icons';
 import { headerHeight, tabBarHeight, theme } from '@/constants/constants';
 import { useThemeContext } from '@/context/useThemeContext';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 export default function TabLayout() {
   const [activeRoute, setActiveRoute] = useState<'globe' | 'create' | 'profile'>('globe');
@@ -71,9 +71,9 @@ export default function TabLayout() {
           headerTitle: 'deankadri',
           headerLeft: () => {
             return (
-              <View className='ml-3'>
+              <Pressable className='ml-3' onPress={() => router.back()}>
                 <Feather name="chevron-left" size={28.5} color={theme[currentTheme].highColor} />
-              </View>
+              </Pressable>
             )
           },
           headerRight: () => {
