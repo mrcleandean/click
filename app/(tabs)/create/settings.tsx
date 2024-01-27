@@ -1,8 +1,8 @@
 import { SafeAreaView, Text, View } from "react-native"
 
-const Devices = () => {
+const Settings = () => {
     return (
-        <SafeAreaView className="flex-[1]">
+        <SafeAreaView className="flex-[1] flex justify-center items-center">
             <View className="flex-[1] flex justify-center items-center">
                 <Text>Settings</Text>
             </View>
@@ -10,4 +10,4 @@ const Devices = () => {
     )
 }
 
-export default Devices;
+export default Settings;

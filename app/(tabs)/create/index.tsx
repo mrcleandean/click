@@ -44,7 +44,7 @@ const Create = () => {
         device = preferredDevice
     }
     const [targetFps, setTargetFps] = useState(60);
-    const screenAspectRatio = Dimensions.get('window').height / Dimensions.get('window').width;
+    const screenAspectRatio = Dimensions.get('screen').height / Dimensions.get('screen').width;
     const format = useCameraFormat(device, [
         { fps: targetFps },
         { videoAspectRatio: screenAspectRatio },
@@ -201,7 +201,7 @@ const Create = () => {
                             <Ionicons name={enableNightMode ? 'moon' : 'moon-outline'} color="white" size={24} />
                         </TouchableOpacity>
                     )}
-                    <TouchableOpacity style={styles.button} onPress={() => router.push('/(tabs)/create/devices')}>
+                    <TouchableOpacity style={styles.button} onPress={() => router.push('/(tabs)/create/settings')}>
                         <Ionicons name="settings-outline" color="white" size={24} />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.button} onPress={() => router.push('/(tabs)/create/scanner')}>

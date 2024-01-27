@@ -27,15 +27,15 @@ const Profile = () => {
                 <View className="w-2/3 flex pt-5 pb-1 pl-4 pr-4 items-center justify-center">
                     <View className="w-full flex-row justify-around">
                         <View className="flex justify-center items-center">
-                            <Text className="text-2xl" style={{ color: theme[currentTheme].highColor }}>0</Text>
+                            <Text className="text-xl" style={{ color: theme[currentTheme].highColor }}>0</Text>
                             <Text className="text-md" style={{ color: theme[currentTheme].highColor }}>Posts</Text>
                         </View>
                         <View className="flex justify-center items-center">
-                            <Text className="text-2xl" style={{ color: theme[currentTheme].highColor }}>0</Text>
+                            <Text className="text-xl" style={{ color: theme[currentTheme].highColor }}>0</Text>
                             <Text className="text-md" style={{ color: theme[currentTheme].highColor }}>Clicks</Text>
                         </View>
                         <View className="flex justify-center items-center">
-                            <Text className="text-2xl" style={{ color: theme[currentTheme].highColor }}>0</Text>
+                            <Text className="text-xl" style={{ color: theme[currentTheme].highColor }}>0</Text>
                             <Text className="text-md" style={{ color: theme[currentTheme].highColor }}>Friends</Text>
                         </View>
                     </View>
