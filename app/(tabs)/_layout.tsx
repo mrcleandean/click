@@ -43,7 +43,7 @@ export default function TabLayout() {
         tabBarShowLabel: false
       }}>
       <Tabs.Screen
-        name="index"
+        name="globe"
         options={{
           tabBarIcon: () => <FontAwesome5 name="globe-americas" size={24} color={activeRoute === 'globe' ? theme[currentTheme].highColor : theme[currentTheme].lowColor} />,
         }}
@@ -78,9 +78,9 @@ export default function TabLayout() {
           },
           headerRight: () => {
             return (
-              <View className='mr-3'>
+              <Pressable className='mr-3' onPress={() => router.push('/(tabs)/profile/settings-m')}>
                 <Feather name="settings" size={25.5} color={theme[currentTheme].highColor} />
-              </View>
+              </Pressable>
             )
           }
         }}
