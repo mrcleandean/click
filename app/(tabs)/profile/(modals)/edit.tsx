@@ -1,5 +1,5 @@
 import { theme } from "@/constants/constants";
-import { useThemeContext } from "@/context/useThemeContext";
+import { useThemeContext } from "@/context/themeProvider";
 import { useState } from "react";
 import { StyleProp, Text, TextInput, TextStyle, View, TouchableOpacity } from "react-native";
 import { FontAwesome6, Entypo } from '@expo/vector-icons';
@@ -29,7 +29,7 @@ const TextInputNamed = ({ className = '', style = {}, placeHolderTextColor, plac
     )
 }
 
-const EditModal = () => {
+const Edit = () => {
     const { currentTheme } = useThemeContext();
     const [assets] = useAssets([require('../../../assets/gladpfp.jpeg')]);
     const [userDetails, setUserdetails] = useState({
@@ -113,4 +113,4 @@ const EditModal = () => {
     )
 }
 
-export default EditModal;
+export default Edit;

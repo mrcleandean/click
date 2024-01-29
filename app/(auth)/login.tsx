@@ -1,17 +1,28 @@
 import { useState } from "react";
-import { View, Text, TouchableOpacity, Pressable, Image, ActivityIndicator, TextInput, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { View, Text, TouchableOpacity, Pressable, ActivityIndicator, TextInput, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { useRouter } from "expo-router";
-import { useThemeContext } from "@/context/useThemeContext";
+import { useThemeContext } from "@/context/themeProvider";
 import { theme } from "@/constants/constants";
+import auth from "@react-native-firebase/auth";
 const Login = () => {
     const { currentTheme } = useThemeContext();
-    const [username, setUsername] = useState<string>('');
+    const [key, setKey] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [loggingIn, setLoggingIn] = useState<boolean>(false);
     const [passwordShown, setPasswordShown] = useState<boolean>(false);
+    const [showError, setShowError] = useState(false);
     const router = useRouter();
-
+    const tryLogin = async () => {
+        setLoggingIn(true);
+        try {
+            await auth().signInWithEmailAndPassword(key, password);
+        } catch (e) {
+            setShowError(true);
+            console.log(e);
+        }
+        setLoggingIn(false);
+    }
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={{ backgroundColor: theme[currentTheme].primary }} className="flex justify-end items-center flex-col flex-[9]">
@@ -19,9 +30,9 @@ const Login = () => {
                     {/* <Image source={} style={{ transform: [{ scale: 0.45 }] }} /> */}
                     <Text className="text-5xl font-bold" style={{ color: theme[currentTheme].highColor }}>click</Text>
                     <TextInput
-                        onChangeText={text => setUsername(text)}
-                        value={username}
-                        placeholder="Username"
+                        onChangeText={text => setKey(text)}
+                        value={key}
+                        placeholder="Email"
                         placeholderTextColor="#acadad"
                         autoCapitalize="none"
                         style={{ color: theme[currentTheme].highColor }}
@@ -42,6 +53,7 @@ const Login = () => {
                             right: 12.5
                         }} onPress={() => setPasswordShown(prev => !prev)} />
                     </View>
+                    {showError && <Text className="text-red-400">Invalid email or password</Text>}
                     <View className="w-[80%] flex items-end">
                         <Pressable>
                             <Text style={{ color: theme[currentTheme].highColor }}>
@@ -53,6 +65,7 @@ const Login = () => {
                         className="w-[80%] flex justify-center items-center rounded-lg p-4"
                         style={{ opacity: loggingIn ? 0.8 : 1, backgroundColor: theme[currentTheme].highColor }}
                         disabled={loggingIn}
+                        onPress={tryLogin}
                     >
                         {
                             loggingIn ? (

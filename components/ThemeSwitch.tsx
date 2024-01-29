@@ -1,5 +1,5 @@
 import { theme } from "@/constants/constants";
-import { useThemeContext } from "@/context/useThemeContext";
+import { useThemeContext } from "@/context/themeProvider";
 import { StyleSheet, Switch, Text, View } from "react-native";
 
 const ThemeSwitch = ({ currentTheme }: { currentTheme: 'light' | 'dark' }) => {
@@ -8,9 +8,10 @@ const ThemeSwitch = ({ currentTheme }: { currentTheme: 'light' | 'dark' }) => {
     return (
         <View style={styles.switchContainer}>
             <Switch
-                trackColor={{ false: theme.dark.primary, true: theme.light.primary }}
+                trackColor={{ false: theme.light.primary, true: theme.dark.primary }}
                 thumbColor={theme[currentTheme].highColor}
                 onValueChange={toggleSwitch}
+                value={currentTheme === 'dark'}
             />
             <Text style={{ fontSize: 11, color: theme[currentTheme].highColor }}>{currentTheme === 'dark' ? 'Dark' : 'Light'} Mode</Text>
         </View>

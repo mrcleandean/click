@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Tabs, router, usePathname } from 'expo-router';
 import { FontAwesome5, Feather } from '@expo/vector-icons';
 import { headerHeight, tabBarHeight, theme } from '@/constants/constants';
-import { useThemeContext } from '@/context/useThemeContext';
+import { useThemeContext } from '@/context/themeProvider';
 import { Pressable, View } from 'react-native';
 
 export default function TabLayout() {

@@ -1,5 +1,5 @@
 import { theme } from '@/constants/constants';
-import { useThemeContext } from '@/context/useThemeContext';
+import { useThemeContext } from '@/context/themeProvider';
 import { BlurView } from '@react-native-community/blur';
 import { usePathname } from 'expo-router';
 import * as StatusBar from 'expo-status-bar';

@@ -1,3 +1,4 @@
+import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { Location } from "@rnmapbox/maps";
 import { CameraRef } from "@rnmapbox/maps/lib/typescript/src/components/Camera";
 import { Dispatch, MutableRefObject, SetStateAction } from "react";
@@ -13,6 +14,11 @@ export type MapPropType = { projectionType: ProjectionType, cameraRef: MapRefTyp
 export type ThemeContextType = {
     currentTheme: 'light' | 'dark';
     setCurrentTheme: SetStateType<'light' | 'dark'>
+}
+export type UserContextType = {
+    userAuth: FirebaseAuthTypes.User | null,
+    userDoc: any,
+    loadingAuth: boolean
 }
 export type CenterButtonPropType = { cameraRef: MutableRefObject<CameraRef | null>, locationRef: MutableRefObject<Location | null>, currentTheme: 'light' | 'dark' }
 export type UserDocType = {

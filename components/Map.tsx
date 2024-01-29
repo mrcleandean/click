@@ -1,5 +1,5 @@
 import { theme } from '@/constants/constants';
-import { useThemeContext } from '@/context/useThemeContext';
+import { useThemeContext } from '@/context/themeProvider';
 import { MapPropType } from '@/constants/types';
 import {
     MapView,

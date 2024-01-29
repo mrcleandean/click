@@ -3,7 +3,7 @@ import Mapbox, { Camera, Location, Logger } from '@rnmapbox/maps';
 import { useRef, useState } from 'react';
 import { ProjectionType } from '@/constants/types';
 import { CenterButton, Interactions, Map, ThemeSwitch } from '@/components';
-import { useThemeContext } from '@/context/useThemeContext';
+import { useThemeContext } from '@/context/themeProvider';
 
 Mapbox.setAccessToken('pk.eyJ1IjoiZGVtZGV2dnkiLCJhIjoiY2xycGl3b2NpMDJjaDJrbXE2d2RhODNiZSJ9.Y34dC57ZpRlz_iEmTyZ2eQ');
 Logger.setLogLevel('verbose');

@@ -1,5 +1,5 @@
 import { theme } from "@/constants/constants";
-import { useThemeContext } from "@/context/useThemeContext";
+import { useThemeContext } from "@/context/themeProvider";
 import type { InteractionsPropType } from "@/constants/types";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 

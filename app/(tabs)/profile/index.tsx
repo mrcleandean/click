@@ -1,19 +1,33 @@
 import { SafeAreaView, ScrollView, Text, View, TouchableOpacity, Dimensions, PixelRatio, Pressable, TouchableWithoutFeedback } from "react-native"
 import { theme } from "@/constants/constants";
 import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons';
-import { useThemeContext } from "@/context/useThemeContext";
+import { useThemeContext } from "@/context/themeProvider";
 import { Image } from 'expo-image';
 import { useAssets } from 'expo-asset';
 import { useMemo, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { SetStateType } from "@/constants/types";
+import { useUser } from "@/context/userProvider";
 
 // asset square may not be supported on all devices 
 const Profile = () => {
-    const { userId } = useLocalSearchParams();
-    const isMe = userId === undefined;
     const { currentTheme } = useThemeContext();
+    const { userId } = useLocalSearchParams();
+    const { userAuth, loadingAuth } = useUser();
     const [activeSection, setActiveSection] = useState<'clicks' | 'posts' | 'reels'>('posts');
+
+    if (!userAuth || loadingAuth) {
+        return (
+            <SafeAreaView className="flex-1">
+                <View className="flex-1 flex justify-center items-center">
+                    <Text>Loading</Text>
+                </View>
+            </SafeAreaView>
+        )
+    }
+
+    const isMe = userId === userAuth.uid;
+
     return (
         <SafeAreaView className="flex-1" style={{ backgroundColor: theme[currentTheme].primary }}>
             <View className='flex flex-row' style={{ backgroundColor: theme[currentTheme].primary }}>
@@ -70,7 +84,7 @@ const ProfileButton = ({ currentTheme, isMe }: { currentTheme: 'dark' | 'light',
         <TouchableOpacity
             className="rounded-lg p-2 w-11/12 mt-3 flex justify-center items-center"
             style={{ backgroundColor: theme[currentTheme].highColor }}
-            onPress={() => router.push('/(tabs)/profile/edit-m')}
+            onPress={() => router.push('/(tabs)/profile/(modals)/edit')}
         >
             <Text className="font-semibold" style={{ color: theme[currentTheme].primary }}>{
                 isMe === undefined || isMe === true ? 'Edit Profile' : 'Follow'

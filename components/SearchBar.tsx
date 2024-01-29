@@ -1,5 +1,5 @@
 import { theme } from "@/constants/constants";
-import { useThemeContext } from "@/context/useThemeContext";
+import { useThemeContext } from "@/context/themeProvider";
 import { StyleSheet, TextInput, View } from "react-native";
 
 const SearchBar = () => {
