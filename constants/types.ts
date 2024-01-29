@@ -1,7 +1,6 @@
 import { Location } from "@rnmapbox/maps";
 import { CameraRef } from "@rnmapbox/maps/lib/typescript/src/components/Camera";
 import { Dispatch, MutableRefObject, SetStateAction } from "react";
-import { User } from 'firebase/auth';
 export type ProjectionType = 'mercator' | 'globe';
 export type SetStateType<T> = Dispatch<SetStateAction<T>>;
 export type InteractionsPropType = {
@@ -19,7 +18,3 @@ export type CenterButtonPropType = { cameraRef: MutableRefObject<CameraRef | nul
 export type UserDocType = {
 
 }
-export type UserContextType = {
-    userAuth: User | null | 'initial',
-    userDoc: UserDocType | null
-} | null;
