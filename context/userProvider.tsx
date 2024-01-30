@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import { UserContextType } from '@/constants/types';
+import { UserContextType, UserDocType } from '@/constants/types';
+import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
@@ -14,16 +15,19 @@ export function useUser() {
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
     const [userAuth, setUserAuth] = useState<FirebaseAuthTypes.User | null>(null);
-    const [userDoc, setUserDoc] = useState<any>(null);
-    const [loadingAuth, setLoadingAuth] = useState(true);
+    const [userDoc, setUserDoc] = useState<(FirebaseFirestoreTypes.DocumentData & UserDocType) | undefined>(undefined);
+    const [loadedAuth, setLoadingAuth] = useState(false);
 
     useEffect(() => {
         const unsubscribe = auth().onAuthStateChanged(user => {
             setUserAuth(user)
             if (user) {
-                // get stored user data
+                firestore().collection('users').doc(user.uid).get().then(snapshot => {
+                    const snapshotData = snapshot.data() as FirebaseFirestoreTypes.DocumentData & UserDocType | undefined;
+                    setUserDoc(snapshotData);
+                });
             }
-            setLoadingAuth(false)
+            setLoadingAuth(true)
         });
         return unsubscribe
     }, []);
@@ -31,7 +35,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     const value = {
         userAuth,
         userDoc,
-        loadingAuth
+        loadedAuth,
+        setUserDoc
     }
 
     return (

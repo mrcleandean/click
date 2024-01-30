@@ -22,7 +22,7 @@ const TwoFactorAuth = () => {
                     placeholderTextColor="#acadad"
                     autoCapitalize="none"
                     style={{ color: theme[currentTheme].highColor }}
-                    className="p-4 text-lg w-[80%] bg-[#353535] rounded-lg"
+                    className="p-4 text-[18px] w-[80%] bg-[#353535] rounded-lg"
                 />
             </View>
         </TouchableWithoutFeedback>

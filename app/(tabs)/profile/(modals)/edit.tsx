@@ -3,8 +3,14 @@ import { useThemeContext } from "@/context/themeProvider";
 import { useState } from "react";
 import { StyleProp, Text, TextInput, TextStyle, View, TouchableOpacity } from "react-native";
 import { FontAwesome6, Entypo } from '@expo/vector-icons';
-import { useAssets } from "expo-asset";
 import { Image } from "expo-image";
+import { useUser } from "@/context/userProvider";
+import { useLoadedAssets } from "@/app/_layout";
+import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
+import { UserDocType } from "@/constants/types";
+
+
+// START HERE NEXT TIME, NOT UPDATING, INDEX OUT OF SYNC. FIX THIS
 
 type TextInputNamedPropType = {
     className?: string;
@@ -31,13 +37,17 @@ const TextInputNamed = ({ className = '', style = {}, placeHolderTextColor, plac
 
 const Edit = () => {
     const { currentTheme } = useThemeContext();
-    const [assets] = useAssets([require('../../../assets/gladpfp.jpeg')]);
+    const { userDoc, userAuth, setUserDoc } = useUser()
+    const { uris } = useLoadedAssets();
     const [userDetails, setUserdetails] = useState({
         username: '',
         identifier: '',
-        displayName: '',
-        bio: ''
+        fullName: '',
+        bio: '',
+        profilePicture: null
     });
+    const [showError, setShowError] = useState(false);
+    if (userDoc === undefined || userAuth === null) return;
     const onChangeText = (text: string, name: string) => {
         const lastChar = text[text.length - 1];
         if (lastChar === '\n') return;
@@ -46,12 +56,26 @@ const Edit = () => {
             [name]: text
         }))
     }
-    if (assets === undefined || !assets[0]) return;
+    const tryUpdate = async () => {
+        try {
+            await firestore().collection('users').doc(userAuth.uid).update(userDetails)
+            const snapshot = await firestore().collection('users').doc(userAuth.uid).get()
+            const data = snapshot.data();
+            if (data === undefined) throw new Error('User doc is undefined');
+            setUserDoc(data as (FirebaseFirestoreTypes.DocumentData & UserDocType));
+        } catch (e) {
+            setShowError(true);
+            console.log(e);
+        }
+    }
+    const { profilePicture } = userDoc;
+    const fallbackUri = uris[0];
+    const imgUri = profilePicture ? profilePicture : fallbackUri;
     return (
         <View className="flex-[1] p-8 flex items-center gap-5" style={{ backgroundColor: theme[currentTheme].primary }}>
             <View className="w-full flex justify-center items-center">
                 <View className="w-20 h-20 relative">
-                    <Image className="object-contain w-full h-full rounded-full border-2" source={{ uri: assets[0].uri }} style={{ borderColor: theme[currentTheme].highColor }} />
+                    <Image className='w-full h-full rounded-full border-2' source={{ uri: imgUri }} style={{ borderColor: theme[currentTheme].highColor }} />
                     <View className="absolute border-2 rounded-full bottom-0.5 right-0.5 w-6 h-6 origin-center bg-blue-400 flex justify-center items-center" style={{ borderColor: theme[currentTheme].primary }}>
                         <Entypo name="plus" size={16} color={theme[currentTheme].highColor} />
                     </View>
@@ -88,9 +112,9 @@ const Edit = () => {
                     style={{ backgroundColor: theme[currentTheme].highColor, color: theme[currentTheme].primary, fontSize: 16 }}
                     placeHolderTextColor={theme[currentTheme].primary}
                     onChangeText={onChangeText}
-                    value={userDetails.displayName}
+                    value={userDetails.fullName}
                     placeholder="Display Name"
-                    name="displayName"
+                    name="fullName"
                 />
             </View>
             <View className="w-full">
@@ -105,7 +129,8 @@ const Edit = () => {
                     name="bio"
                 />
             </View>
-            <TouchableOpacity className="bg-green-300 flex flex-row justify-center items-center p-2.5 border-2 rounded-full" style={{ gap: 6.5, borderColor: theme[currentTheme].highColor }}>
+            {showError && <Text className="text-red-400">Something went wrong</Text>}
+            <TouchableOpacity onPress={tryUpdate} className="bg-green-300 flex flex-row justify-center items-center p-2.5 border-2 rounded-full" style={{ gap: 6.5, borderColor: theme[currentTheme].highColor }}>
                 <Text className="text-md" style={{ color: theme.light.highColor }}>Update Profile</Text>
                 <FontAwesome6 name="edit" size={20} color={theme.light.highColor} />
             </TouchableOpacity>

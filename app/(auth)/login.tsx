@@ -36,7 +36,7 @@ const Login = () => {
                         placeholderTextColor="#acadad"
                         autoCapitalize="none"
                         style={{ color: theme[currentTheme].highColor }}
-                        className="p-4 text-lg w-[80%] bg-[#353535] rounded-lg"
+                        className="p-4 text-[18px] w-[80%] bg-[#353535] rounded-lg"
                     />
                     <View className="w-[80%] flex items-center justify-center flex-row">
                         <TextInput
@@ -45,7 +45,7 @@ const Login = () => {
                             placeholder="Password"
                             placeholderTextColor="#acadad"
                             style={{ color: theme[currentTheme].highColor }}
-                            className="p-4 text-lg w-full bg-[#353535] rounded-lg"
+                            className="p-4 text-[18px] w-full bg-[#353535] rounded-lg"
                             secureTextEntry={!passwordShown}
                         />
                         <Feather name={passwordShown ? "eye" : "eye-off"} size={25} color="white" style={{

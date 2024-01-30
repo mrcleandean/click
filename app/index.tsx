@@ -1,11 +1,10 @@
 import { useUser } from "@/context/userProvider";
-import { Redirect } from "expo-router";
-import { useEffect } from "react";
+import { Redirect, SplashScreen } from "expo-router";
 import { SafeAreaView, Text, View } from "react-native"
 
 const Initial = () => {
-    const { userAuth, loadingAuth } = useUser();
-    if (loadingAuth) {
+    const { userAuth, loadedAuth } = useUser();
+    if (!loadedAuth) {
         return (
             <SafeAreaView className="flex-[1]">
                 <View className="flex-[1] flex justify-center items-center">

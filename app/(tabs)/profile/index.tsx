@@ -4,19 +4,52 @@ import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons';
 import { useThemeContext } from "@/context/themeProvider";
 import { Image } from 'expo-image';
 import { useAssets } from 'expo-asset';
-import { useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
-import { SetStateType } from "@/constants/types";
 import { useUser } from "@/context/userProvider";
+import { SetStateType, UserDocType } from "@/constants/types";
+import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
+import { useLoadedAssets } from "@/app/_layout";
+
+const ViewedUserContext = createContext<{ viewedUser: (FirebaseFirestoreTypes.DocumentData & UserDocType) | undefined, setViewedUser: SetStateType<(FirebaseFirestoreTypes.DocumentData & UserDocType) | undefined> } | undefined>(undefined);
+
+const useViewed = () => {
+    const context = useContext(ViewedUserContext);
+    if (!context) {
+        throw new Error('useViewed must be used within a ViewedProvider');
+    }
+    return context;
+}
+
+const ViewedProvider = () => {
+    const [viewedUser, setViewedUser] = useState<(FirebaseFirestoreTypes.DocumentData & UserDocType) | undefined>(undefined);
+    const { userDoc } = useUser();
+    const { userId } = useLocalSearchParams();
+    useEffect(() => {
+        if (userId === undefined) {
+            setViewedUser(userDoc);
+        } else {
+            firestore().collection('users').doc(userId as string).get().then(snapshot => {
+                const snapshotData = snapshot.data() as FirebaseFirestoreTypes.DocumentData & UserDocType;
+                setViewedUser(snapshotData);
+            });
+        }
+    }, []);
+    return (
+        <ViewedUserContext.Provider value={{ viewedUser, setViewedUser }}>
+            <Profile />
+        </ViewedUserContext.Provider>
+    )
+}
 
 // asset square may not be supported on all devices 
 const Profile = () => {
     const { currentTheme } = useThemeContext();
-    const { userId } = useLocalSearchParams();
-    const { userAuth, loadingAuth } = useUser();
+    const { viewedUser } = useViewed();
+    const { userAuth, loadedAuth, userDoc } = useUser();
     const [activeSection, setActiveSection] = useState<'clicks' | 'posts' | 'reels'>('posts');
 
-    if (!userAuth || loadingAuth) {
+    if (!userAuth || !userDoc || !viewedUser || !loadedAuth) {
         return (
             <SafeAreaView className="flex-1">
                 <View className="flex-1 flex justify-center items-center">
@@ -26,18 +59,16 @@ const Profile = () => {
         )
     }
 
-    const isMe = userId === userAuth.uid;
-
     return (
         <SafeAreaView className="flex-1" style={{ backgroundColor: theme[currentTheme].primary }}>
             <View className='flex flex-row' style={{ backgroundColor: theme[currentTheme].primary }}>
-                <ProfilePicture />
+                <ProfilePicture currentTheme={currentTheme} />
                 <View className="w-2/3 flex pt-5 pb-1 pl-4 pr-4 items-center justify-center">
-                    <Stats currentTheme={currentTheme} numPosts={0} numClicks={0} numFriends={0} />
-                    <ProfileButton currentTheme={currentTheme} isMe={isMe} />
+                    <Stats currentTheme={currentTheme} />
+                    <ProfileButton currentTheme={currentTheme} />
                 </View>
             </View>
-            <UserInfo displayName="Deak Kadri" identifier="Software Dev" bio="Lorem Lorem Lorem Lorem Lorem" currentTheme={currentTheme} />
+            <UserInfo currentTheme={currentTheme} />
             <Highlights currentTheme={currentTheme} />
             <SectionSelector activeSection={activeSection} setActiveSection={setActiveSection} currentTheme={currentTheme} />
             {activeSection === 'posts' ? <PostGrid currentTheme={currentTheme} /> : activeSection === 'clicks' ? <Text>Clicks</Text> : <Text>Reels</Text>}
@@ -45,25 +76,33 @@ const Profile = () => {
     )
 }
 
-const ProfilePicture = () => {
-    const [assets] = useAssets([require('../../../assets/gladpfp.jpeg')]);
-    const uri = assets ? assets[0].uri : '';
-    // const uri = fetchUserPfp();
+const ProfilePicture = ({ currentTheme }: { currentTheme: 'light' | 'dark' }) => {
+    const { uris } = useLoadedAssets();
+    const { viewedUser } = useViewed();
+    if (viewedUser === undefined) return;
+
+    const { profilePicture } = viewedUser;
+    const fallbackUri = uris[0];
+    const imgUri = profilePicture ? profilePicture : uris ? uris[0] : undefined;
+
     return (
         <View className="w-1/3 flex justify-center items-center p-3.5">
-            <View className="w-full h-full flex-1 rounded-full aspect-square overflow-hidden">
-                <Image source={{ uri }} className="w-full h-full" />
+            <View className="w-full h-full flex-1 rounded-full aspect-square overflow-hidden" style={{ backgroundColor: theme[currentTheme].highColor }}>
+                <Image source={{ uri: imgUri }} className={`w-full h-full ${imgUri === fallbackUri && 'scale-125'}`} />
             </View>
         </View>
     )
 }
 
-const Stats = ({ currentTheme, numPosts, numClicks, numFriends }: { currentTheme: 'light' | 'dark', numPosts: number; numClicks: number; numFriends: number; }) => {
+const Stats = ({ currentTheme }: { currentTheme: 'light' | 'dark' }) => {
+    const { viewedUser } = useViewed();
+    if (viewedUser === undefined) return;
+
     return (
         <View className="w-full flex-row justify-around">
-            <Stat label="Posts" num={numPosts} currentTheme={currentTheme} />
-            <Stat label="Clicks" num={numClicks} currentTheme={currentTheme} />
-            <Stat label="Friends" num={numFriends} currentTheme={currentTheme} />
+            <Stat label="Posts" num={viewedUser.posts} currentTheme={currentTheme} />
+            <Stat label="Clicks" num={viewedUser.clicks} currentTheme={currentTheme} />
+            <Stat label="Friends" num={viewedUser.friends} currentTheme={currentTheme} />
         </View>
     )
 }
@@ -79,24 +118,38 @@ const Stat = ({ currentTheme, num, label }: { currentTheme: 'dark' | 'light'; nu
     )
 }
 
-const ProfileButton = ({ currentTheme, isMe }: { currentTheme: 'dark' | 'light', isMe: boolean | undefined }) => {
+const ProfileButton = ({ currentTheme }: { currentTheme: 'dark' | 'light' }) => {
+    const { userDoc, userAuth } = useUser();
+    const { viewedUser } = useViewed();
+    if (viewedUser === undefined || userAuth === null || userDoc === undefined) return;
+    const isMe = userDoc.username === viewedUser.username && userDoc.email === viewedUser.email && userDoc.fullName === viewedUser.fullName && userDoc.identifier === viewedUser.identifier && userDoc.bio === viewedUser.bio && userDoc.profilePicture === viewedUser.profilePicture && userDoc.posts === viewedUser.posts && userDoc.clicks === viewedUser.clicks && userDoc.friends === viewedUser.friends;
     return (
         <TouchableOpacity
             className="rounded-lg p-2 w-11/12 mt-3 flex justify-center items-center"
             style={{ backgroundColor: theme[currentTheme].highColor }}
-            onPress={() => router.push('/(tabs)/profile/(modals)/edit')}
+            onPress={() => {
+                if (isMe) {
+                    router.push('/(tabs)/profile/(modals)/edit')
+                } else {
+                    router.push('/placeholder')
+                }
+            }}
         >
             <Text className="font-semibold" style={{ color: theme[currentTheme].primary }}>{
-                isMe === undefined || isMe === true ? 'Edit Profile' : 'Follow'
+                isMe ? 'Edit Profile' : 'Follow'
             }</Text>
         </TouchableOpacity>
     )
 }
 
-const UserInfo = ({ displayName, identifier, bio, currentTheme }: { displayName: string; identifier: string; bio: string, currentTheme: 'dark' | 'light' }) => {
+const UserInfo = ({ currentTheme }: { currentTheme: 'dark' | 'light' }) => {
+    const { viewedUser } = useViewed();
+    if (viewedUser === undefined) return;
+    const { fullName, identifier, bio } = viewedUser;
+
     return (
         <View className="flex flex-col gap-0.5 pl-5 pr-5 pt-2 pb-0">
-            <Text className="font-bold text-md" style={{ color: theme[currentTheme].highColor }}>{displayName}</Text>
+            <Text className="font-bold text-md" style={{ color: theme[currentTheme].highColor }}>{fullName}</Text>
             <Text className="text-md" style={{ color: theme[currentTheme].highColor }}>{identifier}</Text>
             <Text style={{ color: theme[currentTheme].highColor }}>{bio}</Text>
         </View>
@@ -196,4 +249,4 @@ const Post = ({ uri, currentTheme }: { uri: string; currentTheme: 'light' | 'dar
     )
 }
 
-export default Profile;
+export default ViewedProvider;

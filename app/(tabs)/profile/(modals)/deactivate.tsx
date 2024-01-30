@@ -13,11 +13,11 @@ const Deactivate = () => {
     const [passwordShown, setPasswordShown] = useState<boolean>(false);
     const [optionalFeedback, setOptionalFeedback] = useState('');
     const [showError, setShowError] = useState(false);
-    const { userAuth, loadingAuth } = useUser();
+    const { userAuth, loadedAuth } = useUser();
     const maxFeedbackLength = 300;
     const tryDeactivate = async () => {
         try {
-            if (loadingAuth) throw new Error('App has not loaded yet');
+            if (!loadedAuth) throw new Error('App has not loaded yet');
             if (userAuth === null) throw new Error('User is not logged in');
             if (userAuth.email === null) throw new Error('User does not have an email');
             const credential = auth.EmailAuthProvider.credential(userAuth.email, password);
@@ -37,7 +37,7 @@ const Deactivate = () => {
                     value={password}
                     placeholder="Password"
                     placeholderTextColor="#acadad"
-                    className="p-4 text-lg w-full bg-[#353535] rounded-lg text-white"
+                    className="p-4 text-[18px] w-full bg-[#353535] rounded-lg text-white"
                     secureTextEntry={!passwordShown}
                 />
                 <Feather name={passwordShown ? "eye" : "eye-off"} size={25} color="white" style={{
@@ -54,7 +54,7 @@ const Deactivate = () => {
                     maxLength={300}
                     placeholder="Feel free to let us know"
                     placeholderTextColor="#acadad"
-                    className="text-white p-4 text-lg h-[200px] w-full bg-[#353535] rounded-lg"
+                    className="text-white p-4 text-[18px] h-[200px] w-full bg-[#353535] rounded-lg"
                     secureTextEntry={!passwordShown}
                 />
                 <Text style={{

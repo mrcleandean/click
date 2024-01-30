@@ -78,7 +78,7 @@ export default function TabLayout() {
           },
           headerRight: () => {
             return (
-              <Pressable className='mr-3' onPress={() => router.push('/(tabs)/profile/settings-m')}>
+              <Pressable className='mr-3' onPress={() => router.push('/(tabs)/profile/(modals)/settings')}>
                 <Feather name="settings" size={25.5} color={theme[currentTheme].highColor} />
               </Pressable>
             )

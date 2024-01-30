@@ -1,11 +1,12 @@
 import { StatusBarBackground } from '@/components';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { createContext, useContext, useEffect } from 'react';
 import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { UserProvider, useUser } from '@/context/userProvider';
 import { ThemeProvider } from '@/context/themeProvider';
+import { Asset, useAssets } from 'expo-asset';
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -13,10 +14,35 @@ export {
 
 SplashScreen.preventAutoHideAsync();
 
+const AssetContext = createContext<{ uris: string[], loadedAssets: boolean; errorAssets: boolean } | undefined>(undefined);
+
+export const useLoadedAssets = () => {
+  const context = useContext(AssetContext);
+  if (context === undefined) {
+    throw new Error('useLoadedAssets must be used within a AssetProvider');
+  }
+  return context;
+}
+
+export const AssetProvider = ({ children }: { children: React.ReactNode }) => {
+  const [assets, error] = useAssets(require('../assets/pfpfallback.jpeg'));
+  const value = {
+    uris: assets?.map(asset => asset.uri) ?? [],
+    loadedAssets: !!assets,
+    errorAssets: !!error
+  }
+  return (
+    <AssetContext.Provider value={value}>
+      {children}
+    </AssetContext.Provider>
+  )
+}
+
 const RootStack = () => {
-  const { loadingAuth } = useUser();
-  const loaded = loadingAuth;
-  const error = false;
+  const { loadedAuth } = useUser();
+  const { loadedAssets, errorAssets } = useLoadedAssets();
+  const loaded = loadedAuth && loadedAssets;
+  const error = errorAssets;
 
   useEffect(() => {
     if (error) {
@@ -37,7 +63,8 @@ const RootStack = () => {
       <StatusBarBackground />
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name='index' />
-        <Stack.Screen name='(tabs)' />
+        <Stack.Screen name='placeholder' />
+        <Stack.Screen name='(tabs)' options={{ animation: 'none' }} />
         <Stack.Screen name='(auth)' options={{ animation: 'none' }} />
       </Stack>
     </View>
@@ -49,7 +76,9 @@ const RootLayout = () => {
     <SafeAreaProvider>
       <ThemeProvider>
         <UserProvider>
-          <RootStack />
+          <AssetProvider>
+            <RootStack />
+          </AssetProvider>
         </UserProvider>
       </ThemeProvider>
     </SafeAreaProvider>
